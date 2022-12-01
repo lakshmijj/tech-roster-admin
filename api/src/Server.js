@@ -32,7 +32,8 @@ app.get("/get", async (request, response) => {
         // get reference to database via name
         let db = mongoClient.db(DB_NAME);
         let techArray = await db.collection("technologies").find().sort("difficulty",1).toArray();
-        let json = { "technologies": techArray };
+        let courseArray = await db.collection("courses").find().sort("name",1).toArray();
+        let json = { "technologies": techArray, "courses": courseArray };
 
         // set RESTFul status codes
         response.status(200);
@@ -48,22 +49,48 @@ app.get("/get", async (request, response) => {
     }
 });
 
-app.post("/post", async (request, response) => {
+app.post("/post/:collectionIdentifier/:id", async (request, response) => {
     let mongoClient = new MongoClient(URL, { useUnifiedTopology: true });
     try {
         await mongoClient.connect(); 
+        console.log(request.params);
+        console.log(request.params.collectionIdentifier);
 
-        // sanitize form input
-        request.body.name = request.sanitize(request.body.name);
-        request.body.description = request.sanitize(request.body.description);
-        request.body.difficulty = request.sanitize(request.body.difficulty);
-        request.body.courses.forEach(course => {
-            course.code = request.sanitize(course.code);
-            course.name = request.sanitize(course.name);
-        });
+         // sanitize objectID of document to update from route parameter
+         let id = (request.params.id !== 'null')? new ObjectId(request.sanitize(request.params.id)) : null;
 
-        // insert new document into DB
-        let result = await mongoClient.db(DB_NAME).collection("technologies").insertOne(request.body);
+        //collection identifier to identify the collection
+        let collectionIdentifier = request.sanitize(request.params.collectionIdentifier);
+
+        if(collectionIdentifier === "technologies"){
+            // sanitize form input
+            request.body.name = request.sanitize(request.body.name);
+            request.body.description = request.sanitize(request.body.description);
+            request.body.difficulty = request.sanitize(request.body.difficulty);
+            request.body.courses.forEach(course => {
+                if(course._id) delete course['_id'];
+                course.code = request.sanitize(course.code);
+                course.name = request.sanitize(course.name);
+            });
+        }else if(collectionIdentifier === "courses"){
+            // sanitize form input
+            request.body.code = request.sanitize(request.body.code);
+            request.body.name = request.sanitize(request.body.name);
+        }      
+
+        let result = "";
+
+        //if id is there, update. else insert
+        if(id){
+            let selector = { "_id": id };
+            let newValues = { $set: request.body };    
+            console.log(">>>>>>>>>>new val: ", newValues);    
+            result = await mongoClient.db(DB_NAME).collection(collectionIdentifier).updateOne(selector, newValues);
+        }
+        else{
+            // insert new document into DB
+            result = await mongoClient.db(DB_NAME).collection(collectionIdentifier).insertOne(request.body);
+        }      
 
         // status code for created
         response.status(200);
@@ -78,67 +105,28 @@ app.post("/post", async (request, response) => {
     }
 });
 
-app.put("/put/:id", async (request, response) => {
-    let mongoClient = new MongoClient(URL, { useUnifiedTopology: true });
-    try {
-        await mongoClient.connect(); 
 
-        // sanitize objectID of document to update from route parameter
-        let id = new ObjectId(request.sanitize(request.params.id));
-
-        // sanitize form input
-        request.body.name = request.sanitize(request.body.name);
-        request.body.description = request.sanitize(request.body.description);
-        request.body.difficulty = request.sanitize(request.body.difficulty);
-        request.body.courses.forEach(course => {
-            course.code = request.sanitize(course.code);
-            course.name = request.sanitize(course.name);
-        });
-
-        // update document
-        let techCollection = mongoClient.db(DB_NAME).collection("technologies");
-        let selector = { "_id": id };
-        let newValues = { $set: request.body };
-        let result = await techCollection.updateOne(selector, newValues);
-
-        // check if document was updated correctly
-        if (result.matchedCount <= 0) {
-            response.status(404);
-            response.send({error: 'No technology documents found with ID'});
-            mongoClient.close();
-            return;
-        }
-        
-        // status code for document updated
-        response.status(200);
-        response.send(result);
-        
-    } catch (error) {
-        response.status(500);
-        response.send({error: error.message});
-        throw error;
-    } finally {
-        mongoClient.close();
-    }
-});
-
-app.delete("/delete/:id", async (request, response) => {
+app.delete("/delete/:collectionIdentifier", async (request, response) => {
     // construct MongoClient object for working with MongoDB
     let mongoClient = new MongoClient(URL, { useUnifiedTopology: true });
+    
+    //collection identifier to identify the collection
+    let collectionIdentifier = request.sanitize(request.params.collectionIdentifier);
+
     // Use connect method to connect to the server
     try {
         await mongoClient.connect();
         // get reference to desired collection in DB
-        let techCollection = mongoClient.db(DB_NAME).collection("technologies");
-        // isolate route parameter
-        let id = new ObjectId(request.sanitize(request.params.id));
+        let collectionObj = mongoClient.db(DB_NAME).collection(collectionIdentifier);
+
+        let id = new ObjectId(request.sanitize(request.body._id));
         
         let selector = { "_id": id };
-        let result = await techCollection.deleteOne(selector); 
+        let result = await collectionObj.deleteOne(selector); 
         // status code for created
         if (result.deletedCount <= 0) {
             response.status(404);
-            response.send({error: 'No technology documents found with ID'});
+            response.send({error: 'No documents found with ID'});
             return;
         }
         response.status(200);

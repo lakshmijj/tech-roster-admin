@@ -130,3 +130,16 @@ db.technologies.insert([
     }
 ]);
 
+
+/************COURSES COLLECTIONS***************** */
+// drop collection if already exists
+db.courses.drop();
+// insert new documents into collection
+db.courses.insert([
+    {"code":"WEBD3000","name":"Web Application Programming II"},
+    {"code":"WEBD3027","name":"Developing for Content Management Systems"},
+    {"code":"INET2005","name":"Web Application Programming I"},
+    {"code":"PROG2700","name":"Client Side Programming"},
+    {"code":"PROG3017","name":"Full Stack Programming"},
+    {"code":"PROG1400","name":"Intro to Object Oriented Programming"}      
+]);
