@@ -9,6 +9,7 @@ import List from "./List/List";
 import Tech from "./Tech/Tech";
 import Error from "./Error/Error";
 import Delete from "./Delete/Delete";
+import Crse from "./Crse/Crse";
 import LoadingOverlay from "./LoadingOverlay/LoadingOverlay";
 
 const RETRIEVE_SCRIPT:string = "http://localhost/get";
@@ -47,10 +48,10 @@ function App() {
 
 
   return (
-    <div className="overflow-y-auto min-h-screen p-5 bg-white">
+    <div className="overflow-y-auto min-h-screen p-5 bg-[#e6e6e6]">
       <LoadingOverlay bgColor="#14B8A9" spinnerColor="#FFFFFF" enabled={loading} />
 
-      <div className="font-bold text-xl pb-2.5">_Technology Roster: Course Admin</div>
+      <div className="font-bold text-2xl pb-2.5 text-slate-600">_Technology Roster: Course Admin</div>
 
       {(technologies.length > 0) ?
       <Routes>
@@ -73,6 +74,16 @@ function App() {
           path="/tech"
           element={<Tech technologies={technologies} courses={courses} setLoading={setLoading} setReload={setReload}/>}
         />
+
+        <Route
+          path="/course"
+          element={<Crse technologies={technologies} courses={courses} setLoading={setLoading} setReload={setReload}/>}
+        />
+
+        <Route
+          path="/course/:id"
+          element={<Crse technologies={technologies} courses={courses} setLoading={setLoading} setReload={setReload}/>}
+        />        
 
         <Route
           path="/delete/:entity/:id"

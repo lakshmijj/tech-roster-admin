@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { sendJSONData } from '../Tools/Toolkit';
-import { ComponentProps, Course, Technology } from "./../Tools/data.model";
+import { ComponentProps, Course, Technology } from "../Tools/data.model";
 
 const Tech = ({ technologies, courses, setLoading, setReload }:ComponentProps) => {
 
@@ -71,24 +71,23 @@ const Tech = ({ technologies, courses, setLoading, setReload }:ComponentProps) =
     // ---------------------------------- render to the DOM
     return(
         <div className="p-4">
-        <div className="py-4 text-teal-500 font-bold text-xl">{(id)? 'Edit Technology:': 'Add New Technology:'}</div> 
           <div className="mb-[3px] mt-2.5 text-base">Name:</div>
           <div>
               <input id="inputName" 
-                    className="rounded-md border-2 border-solid border-[#e6e6e6] shadow-sm shadow-[#e6e6e6] text-black bg-white py-1.5 px-3 max-w-xs max-h-[34px] focus:outline-none"
+                    className="rounded-md border-2 border-solid border-[#e6e6e6] shadow-sm shadow-[#e6e6e6] text-black bg-[#e6e6e6] py-1.5 px-3 max-w-xs max-h-[32px] focus:outline-none"
                     maxLength={50} type="text" 
                     value={name} onChange={(e:any) => setName(e.target.value)} />
           </div>
           <div className="mb-[3px] mt-2.5 text-base">Description:</div>
           <div>
               <textarea id="inputDesc" 
-              className="w-52 h-40 rounded-md border-2 border-solid border-[#e6e6e6] shadow-sm shadow-[#e6e6e6] text-black bg-white py-1.5 px-3 focus:outline-none" 
+              className="w-52 h-40 rounded-md border-2 border-solid border-[#e6e6e6] shadow-sm shadow-[#e6e6e6] text-black bg-[#e6e6e6] py-1.5 px-3 focus:outline-none" 
               maxLength={200} value={description} onChange={(e:any) => setDescription(e.target.value)}></textarea>
           </div>
           <div className="mb-[3px] mt-2.5 text-base">Difficulty:</div>
           <div>
                <input id="inputName" 
-                    className="rounded-md border-2 border-solid border-[#e6e6e6] shadow-sm shadow-[#e6e6e6] text-black bg-white py-1.5 px-3 max-w-xs max-h-[32px] focus:outline-none"
+                    className="rounded-md border-2 border-solid border-[#e6e6e6] shadow-sm shadow-[#e6e6e6] text-black bg-[#e6e6e6] py-1.5 px-3 max-w-xs max-h-[32px] focus:outline-none"
                     type="number" min="1" max="10"
                     value={difficulty} onChange={(e:any) => setDifficulty(e.target.value)} />
           </div>
@@ -100,8 +99,8 @@ const Tech = ({ technologies, courses, setLoading, setReload }:ComponentProps) =
                 </div>
             )}
           <div className="mt-2.5">
-              <button className={`border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px] ${(name && description) ? 'bg-[#14B8A6] hover:bg-[#14B8A7]' : 'bg-[#C0C0C0]'} text-[#fff] focus:outline-none`} onClick={addTechnology}>Ok</button>
-              <button className="border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px] bg-[#C0C0C0] text-[#fff] focus:outline-none hover:bg-[#14B8A6]" onClick={backToList}>Cancel</button>
+              <button className={`border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px] ${(name && description && difficulty) ? 'bg-[#428bca] hover:bg-[#245682]' : 'bg-[#C0C0C0]'} text-[#fff] focus:outline-none`} onClick={addTechnology}>Ok</button>
+              <button className="border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px] bg-[#C0C0C0] text-[#fff] focus:outline-none hover:bg-[#245682]" onClick={backToList}>Cancel</button>
           </div>
         </div>
     );

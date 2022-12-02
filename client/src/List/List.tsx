@@ -23,7 +23,7 @@ const List = ({ technologies, courses }:ComponentProps) => {
                         <Link to={`/delete/technologies/${data._id}`} className="text-accent font-bold hover:underline">
                          <i className="pr-2 fa-solid fa-trash text-slate-500 text-xl"></i>
                         </Link>
-                        <span className='text-slate-500 font-bold text-lg'>{data.name}</span>
+                        <span className='text-slate-500 font-semibold text-lg'>{data.name}</span>
                     </div>
                 )}
 
@@ -31,19 +31,19 @@ const List = ({ technologies, courses }:ComponentProps) => {
             <div className="flex grow flex-col flex-nowrap pr-5">
                 <div className="py-4 text-teal-500 font-bold">Courses:</div>
                 <div className="ml-8 pl-2.5 py-0.5 border-l-[6px] border-solid border-teal-500">
-                <Link to="/tech" className="text-slate-500 font-bold hover:underline">
+                <Link to="/course" className="text-slate-500 font-bold hover:underline">
                   <i className="py-4 fa-solid fa-plus text-slate-500 text-xl"></i>
                 </Link>  
                 </div>
                 {courses.map((data:Course, n:number) =>                     
                     <div key={n} className="ml-8 pl-2.5 py-0.5 border-l-[6px] border-solid border-teal-500">
-                        <Link to={`/tech/${data.code}`} className="text-slate-500 font-bold hover:underline">
+                        <Link to={`/course/${data._id}`} className="text-slate-500 font-bold hover:underline">
                          <i className="pr-2 fa-solid fa-pencil text-slate-500 text-xl"></i>
                         </Link>
-                        <Link to={`/tech/${data.code}`} className="text-accent font-bold hover:underline">
+                        <Link to={`/delete/courses/${data._id}`} className="text-accent font-bold hover:underline">
                          <i className="pr-2 fa-solid fa-trash text-slate-500 text-xl"></i>
                         </Link>
-                        <span className='text-slate-500 font-bold text-lg'>{data.name}</span>
+                        <span className='text-slate-500 font-semibold text-lg'>{data.name}</span>
                     </div>
                 )}
 

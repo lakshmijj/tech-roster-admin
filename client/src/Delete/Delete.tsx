@@ -12,20 +12,26 @@ const Delete = ({ technologies, courses, setLoading, setReload }:ComponentProps)
     let { entity } = useParams<{entity:string}>();
     const navigate = useNavigate();
     console.log('Here', id);
+    let selectedItem:any = null;
+    if(entity === "courses"){
+        selectedItem = courses.find(item => item._id === id);
+    }else{
+        selectedItem = technologies.find(item => item._id === id);
+    }
     //submit url
     const DELETE_SCRIPT = `http://localhost/delete/${entity}/`;
-    
     const onDeleteResponse = () => {        
-        //onresponse reset and hide the comments
         setReload(true);
         backToList();
     };
 
     const onError = (message:string) => console.log("*** Error has occured during ajax call: " + message);
 
-    function deleteData(){        
+    function deleteData(){       
+        
         let reqJSON:any = {
-            "_id": id
+            "_id": id,
+            "selectedItem": selectedItem 
         };
         console.log(reqJSON);
         //show loader
@@ -41,12 +47,15 @@ const Delete = ({ technologies, courses, setLoading, setReload }:ComponentProps)
     // ---------------------------------- render to the DOM
     return(
         <div className="p-4">
-           <div className="mt-2.5">
+           <div className="mb-[3px] mt-2.5 text-base">
              Are you sure you want to delete the following {(entity=='technologies')? 'technology?': 'course?'}
            </div>
-          <div className="mt-2.5">
-              <button className="border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px]" onClick={deleteData}>Ok</button>
-              <button className="border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px] bg-[#C0C0C0] text-[#fff] focus:outline-none hover:bg-[#245682]" onClick={backToList}>Cancel</button>
+           <div className="mb-[5px] mt-2.5 text-base font-bold">
+              {selectedItem.name}
+           </div>
+          <div className="mt-5">
+              <button className="border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px] bg-[#14B8A6] text-[#fff] focus:outline-none hover:bg-[#245682]" onClick={deleteData}>Ok</button>
+              <button className="border-none py-1.5 px-2 text-sm align-center text-xs decoration-0 rounded-sm mr-[3px] bg-[#14B8A6] text-[#fff] focus:outline-none hover:bg-[#245682]" onClick={backToList}>Cancel</button>
           </div>
         </div>
     );

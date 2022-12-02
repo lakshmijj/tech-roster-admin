@@ -119,18 +119,68 @@ app.delete("/delete/:collectionIdentifier", async (request, response) => {
         // get reference to desired collection in DB
         let collectionObj = mongoClient.db(DB_NAME).collection(collectionIdentifier);
 
-        let id = new ObjectId(request.sanitize(request.body._id));
+        let id = request.sanitize(request.body._id);
+        let selectedItem = request.body.selectedItem;
+        console.log(request.body.selectedItem.code);
+        //let techContainingCourse = [];
+
+        //if collectionIdentifier is course, check if the technology has the same course entry. if so delete that too.
+        // if(collectionIdentifier === "courses"){
+        //     console.log("courseCode>>>>>>>>>>>>>>>>>> ",selectedItem.code);
+        //     techContainingCourse = await mongoClient.db(DB_NAME).collection("technologies").find({ "courses.code": selectedItem.code }).toArray();            
+        // }
         
-        let selector = { "_id": id };
+        let selector = { "_id": new ObjectId(id) };
+        console.log("selector >>>>>>>>>>>", selector);
+        if(collectionIdentifier === "courses"){
+            mongoClient.db(DB_NAME).collection("technologies").updateMany(
+                { },
+                { $pull: { courses: { code: selectedItem.code } } }
+            )
+        }
+      
         let result = await collectionObj.deleteOne(selector); 
-        // status code for created
+        //status code for created
         if (result.deletedCount <= 0) {
             response.status(404);
             response.send({error: 'No documents found with ID'});
             return;
         }
+        // if(techContainingCourse.length > 0){
+        //     techContainingCourse.forEach(async(tech) => {
+        //         try{
+        //             let techCourses = [];
+        //             techCourses = Object.assign([],tech.courses);
+        //             let index = techCourses.findIndex(course => course.code === selectedItem.code);
+        //             if(index >= 0){
+        //                 techCourses.splice(index, 1);
+        //             }
+        //             tech.courses = techCourses;
+        //             console.log("updated Tech");
+        //             console.log(tech);
+        //             let selector = { "_id": new ObjectId(tech._id) };
+        //             let newValues = { $set: tech };    
+        //             console.log(">>>>>>>>>>new val: ", newValues);    
+        //             //update db                                    
+        //             await mongoClient.db(DB_NAME).collection("technologies").updateOne(selector, newValues);  
+        //         }catch(error){
+        //             response.status(500);
+        //             response.send({error: error.message});
+        //             throw error;
+        //         }finally{
+        //             mongoClient.close();
+        //         }
+                                                     
+        //     });
+        //     response.status(200);
+        //     response.send(result);
+        // }else{
+        //     response.status(200);
+        //     response.send(result);
+        // }
         response.status(200);
         response.send(result);
+       
     } catch (error) {
         response.status(500);
         response.send({error: error.message});
@@ -139,6 +189,8 @@ app.delete("/delete/:collectionIdentifier", async (request, response) => {
         mongoClient.close();
     }
 });
+
+
 
 // wildcard to handle all other non-api URL routings (/selected, /all, /random, /search)
 app.use("/*", express.static(CLIENT_BUILD_PATH));
