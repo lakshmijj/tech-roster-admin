@@ -12,9 +12,9 @@ RUN yarn build
 
 # # !!! Comment out below if no MongoDB
 # # Stage 2: seed the mongoDB database
-FROM mongo
-WORKDIR /usr/db
-COPY mongo/*.js /docker-entrypoint-initdb.d
+# FROM mongo
+# WORKDIR /usr/db
+# COPY mongo/*.js /docker-entrypoint-initdb.d
 
 # Stage 3 : Build Express Server (Web API) on container
 WORKDIR /usr/app/api
