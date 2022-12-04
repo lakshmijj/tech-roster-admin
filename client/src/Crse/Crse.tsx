@@ -13,7 +13,7 @@ const Crse = ({ technologies, courses, setLoading, setReload }:ComponentProps) =
    
     let course:(Course | undefined) = courses.find(item => item['_id'] === id);
     //submit url
-    const SUBMIT_SCRIPT = (id) ? `http://localhost/post/courses/${id}` : `http://localhost/post/courses/null`;
+    const SUBMIT_SCRIPT = (id) ? `/post/courses/${id}` : `/post/courses/null`;
     
 
     //state variables for form 

@@ -18,7 +18,7 @@ const Tech = ({ technologies, courses, setLoading, setReload }:ComponentProps) =
    
     let technology:(Technology | undefined) = technologies.find(item => item._id === id);
     //submit url
-    const SUBMIT_SCRIPT = (id) ? `http://localhost/post/technologies/${id}` : `http://localhost/post/technologies/null`;
+    const SUBMIT_SCRIPT = (id) ? `/post/technologies/${id}` : `/post/technologies/null`;
 
     //state variables for form 
     const [_id, setId] = React.useState<string>(technology?._id || "");

@@ -12,7 +12,7 @@ import Delete from "./Delete/Delete";
 import Crse from "./Crse/Crse";
 import LoadingOverlay from "./LoadingOverlay/LoadingOverlay";
 
-const RETRIEVE_SCRIPT:string = "http://localhost/get";
+const RETRIEVE_SCRIPT:string = "/get";
 
 function App() {
 

@@ -19,7 +19,7 @@ const Delete = ({ technologies, courses, setLoading, setReload }:ComponentProps)
         selectedItem = technologies.find(item => item._id === id);
     }
     //submit url
-    const DELETE_SCRIPT = `http://localhost/delete/${entity}/`;
+    const DELETE_SCRIPT = `/delete/${entity}/`;
     const onDeleteResponse = () => {        
         setReload(true);
         backToList();
